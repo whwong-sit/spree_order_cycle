@@ -1,0 +1,19 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @order_cycle.name %>
+</p>
+
+<p>
+  <strong>Start:</strong>
+  <%= @order_cycle.start %>
+</p>
+
+<p>
+  <strong>End:</strong>
+  <%= @order_cycle.end %>
+</p>
+
+<%= link_to 'Edit', edit_order_cycle_path(@order_cycle) %> |
+<%= link_to 'Back', order_cycles_path %>

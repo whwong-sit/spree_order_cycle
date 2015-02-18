@@ -1,0 +1,29 @@
+<%= form_for(@order_cycle) do |f| %>
+  <% if @order_cycle.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@order_cycle.errors.count, "error") %> prohibited this order_cycle from being saved:</h2>
+
+      <ul>
+      <% @order_cycle.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :name %><br>
+    <%= f.text_field :name %>
+  </div>
+  <div class="field">
+    <%= f.label :start %><br>
+    <%= f.datetime_select :start %>
+  </div>
+  <div class="field">
+    <%= f.label :end %><br>
+    <%= f.datetime_select :end %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>
