@@ -2,12 +2,18 @@
     <% Spree.t(:listing_order_cycles) %>
 <% end %>
 
-<table class="index">
+<% content_for :page_actions do %>
+    <li>
+      <%= button_link_to Spree.t(:new_order_cycle), new_admin_order_cycle_url, :icon => 'plus', :id => 'admin_new_order_cycle_link' %>
+    </li>
+<% end %>
+
+<table class="index" id="listing_users" data-hook>
   <thead>
-    <tr data-hook="order_cycles_header">
-        <th><%= Spree.t(:name) %></th>
-        <th><%= Spree.t(:start) %></th>
-        <th><%= Spree.t(:end) %></th>
+    <tr data-hook="admin_order_cycles_headers">
+        <th><%= sort_link @search, :name, Spree.t(:name), {}, {:title => 'order_cycles_name_title'} %></th>
+        <th><%= sort_link @search, :start, Spree.t(:start), {}, {:title => 'order_cycle_start_title'} %></th>
+        <th><%= sort_link @search, :end, Spree.t(:end), {}, {:title => 'order_cycle_end_title'} %></th>
     </tr>
   </thead>
 
@@ -15,8 +21,8 @@
     <% @order_cycles.each do |order_cycle| %>
         <tr data-hook="order_cycles_row">
             <td class="align-center"><%= order_cycle.name %></td>
-            <td style="padding-left:1em"><%= order_cycle.start %></td>
-            <td style="padding-left:1em"><%= order_cycle.end %></td>
+            <td style="padding-left:1em"><%= Time.zone.utc_to_local(order_cycle.start) %></td>
+            <td style="padding-left:1em"><%= Time.zone.utc_to_local(order_cycle.end) %></td>
         </tr>
     <% end %>
   </tbody>
