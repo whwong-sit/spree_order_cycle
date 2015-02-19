@@ -1,0 +1,33 @@
+<div data-hook="admin_order_cycle_form_fields" class="row">
+
+    <div class="field-block alpha six columns">
+        <div data-hook="admin_order_cycle_time_fields" class="date-range-filter field">
+            <%= label_tag :q_created_at_gt, Spree.t(:cycle_start_and_end) %>
+            <div class="date-range-fields">
+
+                <%= f.field_container :start do %>
+                    <%= f.text_field :start, :class => 'datepicker datepicker-from', :placeholder => Spree.t(:start) %>
+                    <%= error_message_on :order_cycle, :start %>
+                <% end %>
+
+                <span class="range-divider">
+                    <i class="fa fa-arrow-down"></i>
+                </span>
+
+                <%= f.field_container :end do %>
+                    <%= f.text_field :end, :class => 'datepicker datepicker-to', :placeholder => Spree.t(:end) %>
+                    <%= error_message_on :order_cycle, :end %>
+                <% end %>
+            </div>
+        </div>
+    </div>
+    <div class="alpha six columns">
+        <%= f.field_container :name do %>
+            <%= f.label :name, Spree.t(:name) %>
+        <%= f.text_field :name, :class => 'fullwidth', :placeholder => Spree.t(:name) %>
+        <%= error_message_on :order_cycle, :name %>
+    <% end %>
+    </div>
+</div>
+
+

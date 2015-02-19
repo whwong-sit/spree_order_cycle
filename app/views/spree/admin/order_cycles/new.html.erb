@@ -1,0 +1,23 @@
+<% content_for :page_title do %>
+    <%= Spree.t(:new_order_cycle) %>
+<% end %>
+
+<% content_for :page_actions do %>
+    <li>
+        <%= button_link_to Spree.t(:back_to_order_cycles_list), spree.admin_order_cycles_path, :icon => 'arrow-left' %>
+    </li>
+<% end %>
+
+<div data-hook="admin_order_cycle_new_form_header">
+    <%= render :partial => 'spree/shared/error_messages', :locals => { :target => @order_cycle } %>
+</div>
+
+<div data-hook="admin_order_cycle_new_form">
+    <%= form_for [:admin, @order_cycle], url: admin_order_cycles_url, method: :post do |f| %>
+        <%= render :partial => 'form', :locals => { :f => f } %>
+
+        <div data-hook="admin_order_cycle_form_buttons">
+            <%= render :partial => 'spree/admin/shared/new_resource_links' %>
+        </div>
+    <% end %>
+</div>
