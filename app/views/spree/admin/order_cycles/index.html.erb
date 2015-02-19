@@ -19,12 +19,19 @@
 
   <tbody>
     <% @order_cycles.each do |order_cycle| %>
-        <tr data-hook="order_cycles_row">
-            <td class="align-center"><%= order_cycle.name %></td>
+        <tr id="<%= spree_dom_id order_cycle %>" data-hook="order_cycles_index_rows" class="<%= cycle('odd', 'even')%>">
+            <td class='order_cycle_name'><%= link_to order_cycle.name, edit_admin_order_cycle_url(order_cycle) %></td>
             <td style="padding-left:1em"><%= Time.zone.utc_to_local(order_cycle.start) %></td>
             <td style="padding-left:1em"><%= Time.zone.utc_to_local(order_cycle.end) %></td>
+
+            <td data-hook="admin_order_cycles_index_row_actions" class="actions">
+              <%= link_to_edit order_cycle, :no_text => true %>
+              <%= link_to_delete order_cycle, :no_text => true %>
+            </td>
         </tr>
     <% end %>
   </tbody>
 </table>
+
+<%= paginate @order_cycles %>
 
