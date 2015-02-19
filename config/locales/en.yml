@@ -1,5 +1,9 @@
-# Sample localization file for English. Add more files in this directory for other locales.
-# See https://github.com/svenfuchs/rails-i18n/tree/master/rails%2Flocale for starting points.
-
 en:
-  hello: "Hello world"
+    spree:
+        order_cycles: Order Cycles
+        order_cycle: Order Cycle
+        name: Name
+        description: Description
+        new_order_cycle: New Order Cycle
+        edit_order_cycle: Edit Order Cycle
+

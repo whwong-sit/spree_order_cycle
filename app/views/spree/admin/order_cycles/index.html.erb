@@ -1,0 +1,24 @@
+<% content_for :page_title do %>
+    <% Spree.t(:listing_order_cycles) %>
+<% end %>
+
+<table class="index">
+  <thead>
+    <tr data-hook="order_cycles_header">
+        <th><%= Spree.t(:name) %></th>
+        <th><%= Spree.t(:start) %></th>
+        <th><%= Spree.t(:end) %></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @order_cycles.each do |order_cycle| %>
+        <tr data-hook="order_cycles_row">
+            <td class="align-center"><%= order_cycle.name %></td>
+            <td style="padding-left:1em"><%= order_cycle.start %></td>
+            <td style="padding-left:1em"><%= order_cycle.end %></td>
+        </tr>
+    <% end %>
+  </tbody>
+</table>
+
