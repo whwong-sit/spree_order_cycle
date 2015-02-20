@@ -14,7 +14,7 @@
 
 <div data-hook="admin_order_cycle_new_form">
     <%= form_for [:admin, @order_cycle], url: admin_order_cycles_url, method: :post do |f| %>
-        <%= render :partial => 'form', :locals => { :f => f } %>
+        <%= render :partial => 'new_order_cycle_form', :locals => { :f => f } %>
 
         <div data-hook="admin_order_cycle_form_buttons">
             <%= render :partial => 'spree/admin/shared/new_resource_links' %>

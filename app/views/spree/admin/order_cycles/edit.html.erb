@@ -1,0 +1,43 @@
+<% content_for :page_actions do %>
+    <% if can?(:admin, Spree::OrderCycle) %>
+        <li><%= button_link_to Spree.t(:back_to_order_cycles_list), admin_order_cycles_path, icon: 'arrow-left' %></li>
+    <% end %>
+<% end %>
+
+<div data-hook="admin_order_cycle_edit_header">
+    <%= render partial: 'spree/shared/error_messages', locals: { :target => @order_cycle } %>
+</div>
+
+<% if @order_cycle.line_items.empty? %>
+    <div class="no-objects-found">
+        <%= Spree.t(:no_line_items_found_in_this_order_cycle)%>
+    </div>
+<% else %>
+    <div class="row">
+        <div class="objects-found twelve columns" align="center">
+            <div class="field">
+                <%= Spree.t(:the_following_orders_were_completed_between) %>
+            </div>
+            <div class="field">
+                <%= @order_cycle.start %> 
+                <%= Spree.t(:and) %>
+                <%= @order_cycle.end %>
+                <br/>
+            </div>
+            <div class="field">
+                <%= Spree.t(:they_have_been_added_to_this_order_cycle) %>
+                <br/>
+            </div>
+        </div>
+    </div>
+<% end %>
+
+<div data-hook="admin_order_cycle_edit_form">
+    <div id="order-cycle-form-wrapper">
+        <%= render partial: 'edit_completed_orders_form', locals: { :orders  => @pot_orders} %>
+    </div>
+</div>
+
+<% content_for :head do %>
+    <%= javascript_tag 'var expand_variants = true;' %>
+<% end %>
