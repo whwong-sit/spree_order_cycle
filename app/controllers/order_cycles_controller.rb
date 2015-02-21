@@ -14,15 +14,12 @@ module Spree
 
         def edit
             @order_cycle = Spree::OrderCycle.find(params[:id])
-            @cy_orders = @order_cycle.orders
-            #@orders = Spree::Order.all
             cycle_start = @order_cycle.start
             cycle_end = @order_cycle.end
             @pot_orders = Spree::Order.where(:state => 'complete')
                                       .where("completed_at >= ?", cycle_start)
                                       .where("completed_at < ?", cycle_end)
 
-            @list_items = @order_cycle.line_items
             @ord_search = Spree::Order.ransack(params[:q])
         end
 
@@ -38,28 +35,6 @@ module Spree
             @order_cycle.orders << avail_orders
 
             super
-            #invoke_callbacks(:create, :before)
-            #@object.attributes = permitted_resource_params
-
-            #if @object.save
-                #invoke_callbacks(:create, :after)
-
-
-                #flash[:success] = flash_message_for(@object, :successfully_created)
-                #respond_with(@object) do |format|
-                    #format.html { redirect_to location_after_save }
-                    #format.js   { render :layout => false }
-                #end
-            #else
-                #invoke_callbacks(:create, :fails)
-                #respond_with(@object) do |format|
-                    #format.html do
-                        #flash.now[:error] = @object.errors.full_messages.join(", ")
-                        #render action: 'new'
-                    #end
-                    #format.js { render layout: false }
-                #end
-            #end
         end
 
         def destroy
@@ -73,6 +48,25 @@ module Spree
 
         def model_class
             Spree::OrderCycle
+        end
+
+        def line_items
+            @order_cycle = Spree::OrderCycle.find(params[:order_cycle_id])
+            line_items = @order_cycle.line_items
+            by_variant = line_items.group_by {|item| item.variant_id} 
+
+            @oc_line_items = []
+
+            by_variant.each do |id, items|
+                var = Spree::Variant.find(id)
+                total = items.reduce(0){|tot,x| tot + x.total}
+                qty = items.reduce(0){|tot,x| tot + x.quantity}
+                ocl = Spree::OrderCycle::OCLineItem.new(id, var.name, var.price, qty, total, var.currency)
+                @oc_line_items << ocl
+            end
+
+            @oc_line_items.sort! { |a,b| a.name.downcase <=> b.name.downcase }
+            
         end
 
         protected 

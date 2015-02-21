@@ -1,15 +1,14 @@
 <% content_for :page_actions do %>
     <% if can?(:admin, Spree::OrderCycle) %>
-        <li><%= button_link_to Spree.t(:view_consolidated_order), admin_order_cycle_line_items_path(@order_cycle), icon: 'file' %></li>
-        <li><%= button_link_to Spree.t(:back_to_order_cycles_list), admin_order_cycles_path, icon: 'arrow-left' %></li>
+        <li><%= button_link_to Spree.t(:back_to_order_cycle), edit_admin_order_cycle_url(@order_cycle), icon: 'arrow-left' %> </li>
     <% end %>
 <% end %>
 
-<div data-hook="admin_order_cycle_edit_header">
+<div data-hook="admin_order_cycle_line_items_header">
     <%= render partial: 'spree/shared/error_messages', locals: { :target => @order_cycle } %>
 </div>
 
-<% if @pot_orders.empty? %>
+<% if @order_cycle.line_items.empty? %>
     <div class="no-objects-found">
         <%= Spree.t(:no_line_items_found_in_this_order_cycle)%>
     </div>
@@ -17,7 +16,7 @@
     <div class="row">
         <div class="objects-found twelve columns" align="center">
             <div class="field">
-                <%= Spree.t(:the_following_orders_were_completed_between) %>
+                <%= Spree.t(:the_following_items_were_consolidated_from_orders_completed_between) %>
             </div>
             <div class="field">
                 <%= @order_cycle.start %> 
@@ -25,17 +24,13 @@
                 <%= @order_cycle.end %>
                 <br/>
             </div>
-            <div class="field">
-                <%= Spree.t(:they_have_been_added_to_this_order_cycle) %>
-                <br/>
-            </div>
         </div>
     </div>
 <% end %>
 
-<div data-hook="admin_order_cycle_edit_form">
-    <div id="order-cycle-form-wrapper">
-        <%= render partial: 'edit_completed_orders_form', locals: { :orders  => @pot_orders} %>
+<div data-hook="admin_order_cycle_line_items_form">
+    <div id="order-cycle-line_items-form-wrapper">
+        <%= render partial: 'line_items', locals: { :items  => @oc_line_items } %>
     </div>
 </div>
 

@@ -1,0 +1,41 @@
+<% if items.any? %>
+  <table class="line-items index" data-hook="line-items">
+    <colgroup>
+      <col style="width: 10%;" />
+      <col style="width: 20%;" />
+      <col style="width: 20%;" />
+      <col style="width: 15%;" />
+    </colgroup>
+
+    <thead>
+      <th colspan="2"><%= Spree.t(:name) %></th>
+      <th><%= Spree.t(:price) %></th>
+      <th><%= Spree.t(:quantity) %></th>
+      <th><%= Spree.t(:total_price) %></th>
+      <th class="orders-actions actions" data-hook="admin_order_form_line_items_header_actions">&nbsp;</th>
+    </thead>
+
+    <tbody>
+      <% items.each do |item| %>
+        
+        <tr class="line-item" id="line-item-<%= item.id %>">
+          <td class="line-item-image"><%= mini_image(item.variant) %></td>
+          <td class="line-item-name">
+            <%= item.name %>
+          </td>
+          <td class="line-item-price align-center"><%= item.price.to_html %></td>
+          <td class="line-item-qty-show align-center">
+            <%= item.quantity %>
+          </td>
+          <td class="line-item-qty-edit hidden">
+            <%= number_field_tag :quantity, item.quantity, :min => 0, :class => "line_item_quantity", :size => 5 %>
+          </td>
+          <td class="line-item-total align-center"><%= item.total_price.to_html %></td>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+    <% Spree.t(:no_line_items_in_the_orders_of_this_order_cycle) %>
+<% end %>
