@@ -17,6 +17,7 @@
     </thead>
 
     <tbody>
+      <% items_total_price = 0.0 %>
       <% items.each do |item| %>
         
         <tr class="line-item" id="line-item-<%= item.id %>">
@@ -36,11 +37,18 @@
             <%= text_field_tag :quantity, item.quantity, :class => 'line_item_quantity' %>
           </td>
           <td class="line-item-total align-center"><%= item.total_price.to_html %></td>
+          <% items_total_price += item.total_price.money.to_f %>
           </td>
         </tr>
       <% end %>
     </tbody>
   </table>
+
+  <fieldset class="no-border-bottom" id="order-total" data-hook="order_details_total">
+      <legend><%= Spree.t(:order_total) %></legend>
+      <span class="order-total"><%= Spree::Money.new(items_total_price).to_html %></span>
+  </fieldset>
+
 <% else %>
     <% Spree.t(:no_line_items_in_the_orders_of_this_order_cycle) %>
 <% end %>
