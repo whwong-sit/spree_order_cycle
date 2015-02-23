@@ -16,18 +16,42 @@ module Spree
                 ## are specific to individual orders
             #},        
         class OCLineItem
-            attr_accessor :id, :name, :price, :quantity, :total_price, :currency
+            attr_accessor :id, :name, :price, :total_price, :currency
+            attr_accessor :units, :quantity
             
             def initialize(id, name, price, quantity, total_price, currency)
                 @id, @name = id, name
-                @quantity, @currency = quantity, currency
+                @currency = currency
+
+                @units = 'each'
+
+                # convert to kg if applicable
+                if @name =~ /(\d+)\s*g/  # e.g. 500g
+                    #mult = 1/$1.to_i * 1000  # constant to multiply by to get to kg
+                    mult = 1000/$1.to_i
+                    quantity = quantity.to_f / mult
+                    price = price * mult
+                    # total price remains the same
+                    @units = 'kg'
+                end
+
+                @quantity = quantity
                 @price = Spree::Money.new price, :currency => currency
                 @total_price = Spree::Money.new total_price, :currency => currency
-
             end
 
             def variant
                 Spree::Variant.find(@id)
+            end
+
+            def present_quantity
+
+                # this is a hack to convert things like "500g"x3 to "1.5kg"
+                #  this should rightfully be extended in the Spree::Product model
+                #  with 'units', 'price per unit', 'min_units'
+                #  and with helper views to have converters to coarser scales of the units
+                #  e.g.  g -> kg with associated price changes
+
             end
         end
     end

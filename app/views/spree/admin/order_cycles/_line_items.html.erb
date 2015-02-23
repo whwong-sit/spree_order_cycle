@@ -11,6 +11,7 @@
       <th colspan="2"><%= Spree.t(:name) %></th>
       <th><%= Spree.t(:price) %></th>
       <th><%= Spree.t(:quantity) %></th>
+      <th><%= Spree.t(:units) %></th>
       <th><%= Spree.t(:total_price) %></th>
       <th class="orders-actions actions" data-hook="admin_order_form_line_items_header_actions">&nbsp;</th>
     </thead>
@@ -27,8 +28,12 @@
           <td class="line-item-qty-show align-center">
             <%= item.quantity %>
           </td>
+          <td class="line-item-qty-show align-center">
+            <%= item.units %>
+          </td>
           <td class="line-item-qty-edit hidden">
-            <%= number_field_tag :quantity, item.quantity, :min => 0, :class => "line_item_quantity", :size => 5 %>
+            <%#<%= number_field_tag :quantity, item.quantity, :min => 0, :class => "line_item_quantity", :size => 5 %>%>
+            <%= text_field_tag :quantity, item.quantity, :class => 'line_item_quantity' %>
           </td>
           <td class="line-item-total align-center"><%= item.total_price.to_html %></td>
           </td>
