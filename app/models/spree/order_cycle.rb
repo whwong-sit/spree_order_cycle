@@ -27,12 +27,12 @@ module Spree
 
                 # convert to kg if applicable
                 if @name =~ /(\d+)\s*g/  # e.g. 500g
-                    #mult = 1/$1.to_i * 1000  # constant to multiply by to get to kg
-                    mult = 1000/$1.to_i
+                    mult = 1000.0/$1.to_f
                     quantity = quantity.to_f / mult
                     price = price * mult
                     # total price remains the same
                     @units = 'kg'
+                    @name = @name.sub /[\s-]*\d+\s*g/, ''
                 end
 
                 @quantity = quantity
