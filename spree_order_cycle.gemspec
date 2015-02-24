@@ -17,6 +17,7 @@ Gem::Specification.new do |s|
   s.requirements << 'none'
 
   s.add_dependency 'spree_core', '~> 2.4.2'
+  s.add_dependency 'spree_backend', '~> 2.4.2'
 
   s.add_development_dependency 'capybara', '~> 2.4'
   s.add_development_dependency 'coffee-rails'
@@ -29,5 +30,4 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'simplecov'
   s.add_development_dependency 'sqlite3'
 
-  s.add_dependency 'spree_backend'
 end
