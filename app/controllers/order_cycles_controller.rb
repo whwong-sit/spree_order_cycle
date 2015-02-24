@@ -5,6 +5,8 @@ module Spree
         before_action :check_json_authenticity, only: :index
         before_action :load_roles
 
+        helper OrderCyclesHelper
+
         def index
             respond_with(@collection) do |format|
                 format.html
@@ -50,22 +52,47 @@ module Spree
             Spree::OrderCycle
         end
 
+
         def line_items
             @order_cycle = Spree::OrderCycle.find(params[:order_cycle_id])
-            line_items = @order_cycle.line_items
-            by_variant = line_items.group_by {|item| item.variant_id} 
+            @oc_line_items = find_line_items(@order_cycle)
+        end
 
-            @oc_line_items = []
+        def pickup_sheet
+            @order_cycle = Spree::OrderCycle.find(params[:order_cycle_id])
+            @oc_line_items = find_line_items(@order_cycle)
 
-            by_variant.each do |id, items|
-                var = Spree::Variant.find(id)
-                total = items.reduce(0){|tot,x| tot + x.total}
-                qty = items.reduce(0){|tot,x| tot + x.quantity}
-                ocl = Spree::OrderCycle::OCLineItem.new(id, var.name, var.price, qty, total, var.currency)
-                @oc_line_items << ocl
+            @user_names = [] 
+            @user_to_line_items = {}
+            #Eager loading to prevent N+1 queries
+            orders = @order_cycle.orders.includes([:ship_address, :line_items])
+            
+            orders.each do |order|
+
+                lastname = order.ship_address.lastname
+                firstname = order.ship_address.firstname
+
+                user = if lastname && firstname 
+                    "#{firstname[0].upcase} #{lastname}"
+                else
+                    order.email
+                end
+
+                @user_names << user
+
+                user_oc_line_items = @user_to_line_items[user] || []
+
+                order.line_items.each do |item|
+                    var = Spree::Variant.find(item.variant_id)
+                    ocl = Spree::OrderCycle::OCLineItem.new(item.variant_id, var.name, var.price, item.quantity, item.total, var.currency)
+                    user_oc_line_items << ocl
+                end
+
+                @user_to_line_items[user] = user_oc_line_items
+
             end
 
-            @oc_line_items.sort! { |a,b| a.name.downcase <=> b.name.downcase }
+            @user_names.sort!.uniq!
             
         end
 
@@ -83,6 +110,28 @@ module Spree
                 @roles = Spree::Role.all
             end
             
+            # Not thread-safe at all 
+            # Potential for memoisation
+            def find_line_items(order_cycle)
+                
+                line_items = order_cycle.line_items
+                by_variant = line_items.group_by {|item| item.variant_id} 
+
+                ## THIS Part should be made thread safe
+                oc_line_items = []
+
+                by_variant.each do |id, items|
+                    var = Spree::Variant.find(id)
+                    total = items.reduce(0){|tot,x| tot + x.total}
+                    qty = items.reduce(0){|tot,x| tot + x.quantity}
+                    ocl = Spree::OrderCycle::OCLineItem.new(id, var.name, var.price, qty, total, var.currency)
+                    oc_line_items << ocl
+                end
+                ## END thread-safe part
+
+                oc_line_items.sort! { |a,b| a.name.downcase <=> b.name.downcase }
+                oc_line_items
+            end
         end
     end
 end

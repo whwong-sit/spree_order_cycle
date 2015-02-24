@@ -1,0 +1,39 @@
+<% content_for :page_actions do %>
+    <% if can?(:admin, Spree::OrderCycle) %>
+        <li><%= button_link_to Spree.t(:back_to_order_cycle), edit_admin_order_cycle_url(@order_cycle), icon: 'arrow-left' %> </li>
+    <% end %>
+<% end %>
+
+<div data-hook="admin_order_cycle_line_items_header">
+    <%= render partial: 'spree/shared/error_messages', locals: { :target => @order_cycle } %>
+</div>
+
+<% if @order_cycle.orders.empty? %>
+    <div class="no-objects-found">
+        <%= Spree.t(:no_orders_found_in_this_order_cycle)%>
+    </div>
+<% else %>
+    <div class="row">
+        <div class="objects-found twelve columns" align="center">
+            <div class="field">
+                <%= Spree.t(:the_following_items_were_consolidated_from_orders_completed_between) %>
+            </div>
+            <div class="field">
+                <%= @order_cycle.start %> 
+                <%= Spree.t(:and) %>
+                <%= @order_cycle.end %>
+                <br/>
+            </div>
+        </div>
+    </div>
+<% end %>
+
+<div data-hook="admin_order_cycle_line_items_form">
+    <div id="order-cycle-line_items-form-wrapper">
+        <%= render partial: 'pickup_sheet', locals: { :items  => @oc_line_items, :names => @user_names } %>
+    </div>
+</div>
+
+<% content_for :head do %>
+    <%= javascript_tag 'var expand_variants = true;' %>
+<% end %>

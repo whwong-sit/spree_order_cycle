@@ -1,0 +1,25 @@
+<% if items.any? %>
+  <table class="line-items index" data-hook="line-items">
+    <% item_name_to_idx = {} %>
+    <% items.each_with_index do |item, index| %>
+        <% item_name_to_idx[item.name] = index %>
+    <% end %>
+
+    <% item_names = items.map { |x| "#{x.name} (#{x.units})" } %>
+
+    <thead>
+        <th>Name</th>
+        <% item_names.each_with_index do | name, index| %>
+            <th><%= name %></th>
+        <% end %>
+    </thead>
+    <tbody>
+        <% @user_names.each do |user| %> 
+            <%= raw construct_html_table_line(user, @user_to_line_items[user], item_name_to_idx) %>
+        <% end %>
+    </tbody>
+
+  </table>
+<% else %>
+    <% Spree.t(:no_line_items_in_the_orders_of_this_order_cycle) %>
+<% end %>
