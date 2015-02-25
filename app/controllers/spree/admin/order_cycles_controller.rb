@@ -31,7 +31,7 @@ module Spree
             # if they do not have an assigned order_cycle_id
             #debug(params)
             avail_orders = Spree::Order.where(:state => 'complete')
-            .where(order_cycle_id: [false, nil])
+            .where(order_cycle_id: nil)
             .where("completed_at >= ?", params[:order_cycle][:start])
             .where("completed_at < ?", params[:order_cycle][:end])
             @order_cycle.orders << avail_orders
