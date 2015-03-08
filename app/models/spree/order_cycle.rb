@@ -64,6 +64,23 @@ module Spree
             end
         end
 
+        #def single_line_item_qty_sum
+
+            #lines = single_line_items
+            #by_variant = lines.group_by {|item| item.variant_id} 
+
+            #single_qty_sum = {}
+
+            #by_variant.each do |id, items|
+                #var = Spree::Variant.find(id)
+                #name = var.name
+                #tot_qty = items.reduce(0){|tot,x| tot + x.quantity}
+                #single_qty_sum[name] = tot_qty
+            #end
+
+            #single_qty_sum
+        #end
+        
         def single_line_item_qty_breakdown
 
             lines = single_line_items
@@ -79,6 +96,25 @@ module Spree
             end
 
             single_qty_breakdown
+        end
+
+        def variant_name_to_line_items
+
+            lines = single_line_items
+            #by_variant = lines.group_by {|item| item.variant_id} 
+            lines.group_by {|item| item.variant.name } 
+
+            #name_to_line_items = {}
+
+            #by_variant.each do |id, items|
+                #var = Spree::Variant.find(id)
+                #name = var.name
+                ##email_qtys = items.map {|x| [x.order.email, x.quantity] }
+                ##single_qty_breakdown[name] = email_qtys
+                #name_to_line_items[name] = items
+            #end
+
+            #name_to_line_items
         end
 
         protected

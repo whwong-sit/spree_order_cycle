@@ -68,7 +68,17 @@ module Spree
 
         def pickup_sheet
             @order_cycle = Spree::OrderCycle.find(params[:order_cycle_id])
-            @oc_line_items = find_line_items(@order_cycle)
+            @name_to_items = @order_cycle.variant_name_to_line_items
+            
+            respond_to do |format|
+                format.html
+                format.xls
+            end
+        end
+
+        def old_pickup_sheet
+            @order_cycle = Spree::OrderCycle.find(params[:order_cycle_id])
+            @oc_line_items = @order_cycle.line_items
 
             @user_names = [] 
             @user_to_line_items = {}
