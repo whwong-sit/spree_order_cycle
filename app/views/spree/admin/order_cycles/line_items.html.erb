@@ -1,5 +1,6 @@
 <% content_for :page_actions do %>
     <% if can?(:admin, Spree::OrderCycle) %>
+        <li><%= button_link_to Spree.t(:download_excel), admin_order_cycle_line_items_path(@order_cycle, format: "xls"), icon: 'file' %> </li>
         <li><%= button_link_to Spree.t(:back_to_order_cycle), edit_admin_order_cycle_url(@order_cycle), icon: 'arrow-left' %> </li>
     <% end %>
 <% end %>

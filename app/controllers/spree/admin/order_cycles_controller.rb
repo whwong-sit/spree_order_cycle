@@ -55,7 +55,14 @@ module Spree
 
         def line_items
             @order_cycle = Spree::OrderCycle.find(params[:order_cycle_id])
-            @oc_line_items = find_line_items(@order_cycle)
+            @oc_line_items = @order_cycle.line_items
+            
+            respond_to do |format|
+                format.html
+                format.csv { send_data @order_cycle.to_csv }
+                #format.xls { send_data @order_cycle.to_csv(col_sep: "\t") }
+                format.xls
+            end
         end
 
         def pickup_sheet
@@ -110,28 +117,6 @@ module Spree
                 @roles = Spree::Role.all
             end
             
-            # Not thread-safe at all 
-            # Potential for memoisation
-            def find_line_items(order_cycle)
-                
-                line_items = order_cycle.line_items
-                by_variant = line_items.group_by {|item| item.variant_id} 
-
-                ## THIS Part should be made thread safe
-                oc_line_items = []
-
-                by_variant.each do |id, items|
-                    var = Spree::Variant.find(id)
-                    total = items.reduce(0){|tot,x| tot + x.total}
-                    qty = items.reduce(0){|tot,x| tot + x.quantity}
-                    ocl = Spree::OrderCycle::OCLineItem.new(id, var.name, var.price, qty, total, var.currency)
-                    oc_line_items << ocl
-                end
-                ## END thread-safe part
-
-                oc_line_items.sort! { |a,b| a.name.downcase <=> b.name.downcase }
-                oc_line_items
-            end
         end
     end
 end
