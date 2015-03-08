@@ -56,7 +56,8 @@ module Spree
         def line_items
             @order_cycle = Spree::OrderCycle.find(params[:order_cycle_id])
             @oc_line_items = @order_cycle.line_items
-            
+            @oc_single_qtys = @order_cycle.single_line_item_qty_breakdown
+
             respond_to do |format|
                 format.html
                 format.csv { send_data @order_cycle.to_csv }

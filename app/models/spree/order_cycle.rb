@@ -50,7 +50,7 @@ module Spree
                     price = price * mult
                     # total price remains the same
                     @units = 'kg'
-                    @name = @name.sub /[\s-]*\d+\s*g/, ''
+                    #@name = @name.sub /[\s-]*\d+\s*g/, ''
                 end
 
                 @quantity = quantity
@@ -62,6 +62,23 @@ module Spree
             def variant
                 Spree::Variant.find(@id)
             end
+        end
+
+        def single_line_item_qty_breakdown
+
+            lines = single_line_items
+            by_variant = lines.group_by {|item| item.variant_id} 
+
+            single_qty_breakdown = {}
+
+            by_variant.each do |id, items|
+                var = Spree::Variant.find(id)
+                name = var.name
+                qtys = items.map {|x| x.quantity}
+                single_qty_breakdown[name] = qtys
+            end
+
+            single_qty_breakdown
         end
 
         protected

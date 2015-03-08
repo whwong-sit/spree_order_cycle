@@ -28,24 +28,50 @@
    <NumberFormat ss:Format="Currency"/>
   </Style>
  </Styles>
-  <Worksheet ss:Name="Item List">
-    <Table ss:ExpandedColumnCount="5" ss:ExpandedRowCount="60" x:FullColumns="1"
+  <Worksheet ss:Name="Consolidated Items">
+    <Table ss:ExpandedColumnCount="5" x:FullColumns="1"
    x:FullRows="1" ss:DefaultColumnWidth="65" ss:DefaultRowHeight="15">
       <Column ss:AutoFitWidth="0" ss:Width="126"/>
       <Row>
         <Cell><Data ss:Type="String">Name</Data></Cell>
         <Cell><Data ss:Type="String">Price</Data></Cell>
-        <Cell><Data ss:Type="String">Quantity</Data></Cell>
-        <Cell><Data ss:Type="String">Units</Data></Cell>
-        <Cell><Data ss:Type="String">Total</Data></Cell>
+        <Cell><Data ss:Type="String">Total ($)</Data></Cell>
+        <Cell><Data ss:Type="String">Total (#)</Data></Cell>
+        <Cell><Data ss:Type="String">Unit</Data></Cell>
       </Row>
     <% @oc_line_items.each do |line_item| %>
       <Row>
-        <Cell><Data ss:Type="String"><%= line_item.name.encode(:xml => :text) %></Data></Cell>
+        <Cell><Data ss:Type="String"><%= line_item.name %></Data></Cell>
         <Cell ss:StyleID="s62"><Data ss:Type="Number"><%= line_item.price.money.to_f %></Data></Cell>
+        <Cell ss:StyleID="s62"><Data ss:Type="Number"><%= line_item.gross_total.money.to_f %></Data></Cell>
         <Cell><Data ss:Type="Number"><%= line_item.quantity %></Data></Cell>
         <Cell><Data ss:Type="String"><%= line_item.units %></Data></Cell>
-        <Cell ss:StyleID="s62"><Data ss:Type="Number"><%= line_item.gross_total.money.to_f %></Data></Cell>
+      </Row>
+    <% end %>
+    </Table>
+  </Worksheet>
+
+  <Worksheet ss:Name="Packing Breakdown">
+    <Table x:FullColumns="1"
+   x:FullRows="1" ss:DefaultColumnWidth="65" ss:DefaultRowHeight="15">
+      <Column ss:AutoFitWidth="0" ss:Width="126"/>
+      <Row>
+        <Cell><Data ss:Type="String">Name</Data></Cell>
+        <Cell><Data ss:Type="String">Unit</Data></Cell>
+        <Cell><Data ss:Type="String">Qty per Pack</Data></Cell>
+      </Row>
+      <% @oc_single_qtys.sort_by {|name, qtys| name}.each do |name, qtys| %>
+      <Row>
+        <Cell><Data ss:Type="String"><%= name %></Data></Cell>
+        <% unit = 'each' %>
+        <% if name =~ /(\d+)\s*g/ #e.g. 500g %>
+            <% unit = "#{$1.to_s}g" %>
+        <% end %>
+
+        <Cell><Data ss:Type="String"><%= unit %></Data></Cell>
+        <% qtys.each do |qty| %>
+            <Cell><Data ss:Type="Number"><%= qty %></Data></Cell>
+        <% end %>
       </Row>
     <% end %>
     </Table>
