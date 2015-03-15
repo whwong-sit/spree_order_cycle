@@ -134,6 +134,31 @@
     </Table>
   </Worksheet>
 
+  <Worksheet ss:Name="Username Key">
+    <Table x:FullColumns="1" x:FullRows="1" ss:DefaultColumnWidth="90" ss:DefaultRowHeight="15">
+      <Column ss:AutoFitWidth="0" ss:Width="126"/>
+
+      <Row ss:AutoFitHeight="0">
+      <Cell ss:StyleID="s62"><Data ss:Type="String">Last Name</Data></Cell>
+      <Cell ss:StyleID="s62"><Data ss:Type="String">First Name</Data></Cell>
+      <Cell ss:StyleID="s62"><Data ss:Type="String">Username</Data></Cell>
+      <Cell ss:StyleID="s62"><Data ss:Type="String">Email</Data></Cell>
+      </Row>
+
+      <% names = @order_cycle.orders.map {|x| ship = x.shipping_address; Spree::Admin::OrderCyclesController::NameField.new ship.lastname, ship.firstname, x.email } %>
+      <% names.sort_by! {|name| [ name.lastname, name.firstname, name.email ] } %>
+      <% for name in names %>
+          <Row ss:AutoFitHeight="0">
+          <Cell ss:StyleID="s63"><Data ss:Type="String"><%= name.lastname %></Data></Cell>
+          <Cell ss:StyleID="s63"><Data ss:Type="String"><%= name.firstname %></Data></Cell>
+          <% email_flds = name.email.split('@') %>
+          <Cell ss:StyleID="s63"><Data ss:Type="String"><%= email_flds.first %></Data></Cell>
+          <Cell ss:StyleID="s63"><Data ss:Type="String"><%= name.email.encode %></Data></Cell>
+          </Row>
+      <% end %>
+
+    </Table>
+  </Worksheet>
 </Workbook>
 
 

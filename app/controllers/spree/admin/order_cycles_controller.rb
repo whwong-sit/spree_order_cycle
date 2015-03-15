@@ -7,6 +7,8 @@ module Spree
 
         helper OrderCyclesHelper
 
+        NameField = Struct.new :lastname, :firstname, :email
+
         def index
             respond_with(@collection) do |format|
                 format.html
